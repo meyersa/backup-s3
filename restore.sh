@@ -3,7 +3,7 @@
 #
 #     This file is part of hleroy/backup-s3. backup-s3 periodically backs up
 #     a database (postgres or mysql) and/or data folder(s) to Amazon S3.
-#     Copyright © 2012 Hervé Le Roy
+#     Copyright © 2012-2023 Hervé Le Roy
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -73,7 +73,11 @@ if [[ $DB_ENGINE == "postgres" || $DB_ENGINE == "mysql" ]]; then
 
   # Fetch database backup
   echo "[INFO] Fetching database backup from S3"
-  aws s3 cp s3://$S3_BUCKET/$DB_ENGINE/$BACKUPNAME.sql.gz dump.sql.gz
+  if [[ -z $S3_ENDPOINT_URL ]]; then
+    aws s3 cp s3://$S3_BUCKET/$DB_ENGINE/$BACKUPNAME.sql.gz dump.sql.gz
+  else
+    aws s3 cp s3://$S3_BUCKET/$DB_ENGINE/$BACKUPNAME.sql.gz --endpoint-url=$S3_ENDPOINT_URL dump.sql.gz
+  fi
   gzip -d dump.sql.gz
 
   echo "[INFO] Restoring database"
@@ -104,7 +108,11 @@ if [[ ! -z $DATA_PATH ]]; then
 
   # Fetch data backup
   echo "[INFO] Fetching data backup from S3"
-  aws s3 cp s3://$S3_BUCKET/data/$BACKUPNAME.tar data.tar
+  if [[ -z $S3_ENDPOINT_URL ]]; then
+    aws s3 cp s3://$S3_BUCKET/data/$BACKUPNAME.tar data.tar
+  else
+    aws s3 cp s3://$S3_BUCKET/data/$BACKUPNAME.tar --endpoint-url=$S3_ENDPOINT_URL data.tar
+  fi
 
   # Data path can contain multiple paths separated by colons
   IFS=: read -r -a data_path_array <<<"$DATA_PATH"

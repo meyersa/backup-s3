@@ -3,7 +3,7 @@
 #
 #     This file is part of hleroy/backup-s3. backup-s3 periodically backs up
 #     a database (postgres or mysql) and/or data folder(s) to Amazon S3.
-#     Copyright © 2012 Hervé Le Roy
+#     Copyright © 2012-2023 Hervé Le Roy
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by

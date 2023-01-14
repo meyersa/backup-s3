@@ -3,7 +3,7 @@
 #
 #     This file is part of hleroy/backup-s3. backup-s3 periodically backs up
 #     a database (postgres or mysql) and/or data folder(s) to Amazon S3.
-#     Copyright © 2012 Hervé Le Roy
+#     Copyright © 2012-2023 Hervé Le Roy
 #
 #     This program is free software: you can redistribute it and/or modify
 #     it under the terms of the GNU General Public License as published by
@@ -90,9 +90,13 @@ if [[ $DB_ENGINE == "postgres" || $DB_ENGINE == "mysql" ]]; then
 
   fi
 
-# Upload database backup to Amazon S3
-echo "[INFO] Uploading database backup to $S3_BUCKET"
-cat dump.sql.gz | aws s3 cp - s3://$S3_BUCKET/$DB_ENGINE/$BACKUP_DATE.$RAND_STR.sql.gz || exit 2
+  # Upload database backup to Amazon S3 or alternative endpoint
+  echo "[INFO] Uploading database backup to $S3_BUCKET"
+  if [[ -z $S3_ENDPOINT_URL ]]; then
+    cat dump.sql.gz | aws s3 cp - s3://$S3_BUCKET/$DB_ENGINE/$BACKUP_DATE.$RAND_STR.sql.gz || exit 2
+  else
+    cat dump.sql.gz | aws s3 cp - s3://$S3_BUCKET/$DB_ENGINE/$BACKUP_DATE.$RAND_STR.sql.gz --endpoint-url=$S3_ENDPOINT_URL || exit 2
+  fi
 
 fi
 
@@ -118,10 +122,14 @@ if [[ ! -z $DATA_PATH ]]; then
      tar rf $FILE --warning=no-file-changed --absolute-names "$dir" || ( export ret=$?; [[ $ret -eq 1 ]] || exit "$ret" )
   done
 
-  # Upload data backup to Amazon S3
+  # Upload data backup to Amazon S3 or alternative endpoint
   echo "[INFO] Uploading data backup to $S3_BUCKET"
-  cat $FILE | aws s3 cp - s3://$S3_BUCKET/data/$BACKUP_DATE.$RAND_STR.tar || exit 2
+  if [[ -z $S3_ENDPOINT_URL ]]; then
+    cat $FILE | aws s3 cp - s3://$S3_BUCKET/data/$BACKUP_DATE.$RAND_STR.tar || exit 2
+  else
+    cat $FILE | aws s3 cp - s3://$S3_BUCKET/data/$BACKUP_DATE.$RAND_STR.tar --endpoint-url=$S3_ENDPOINT_URL || exit 2
+  fi
 
 fi
 
-echo "[INFO] Backup uploaded successfully to Amazon S3"
+echo "[INFO] Backup uploaded successfully to S3"

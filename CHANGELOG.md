@@ -5,7 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.0.0] - 2022-06-25
+## [2.2.0] - 2023-01-14
+
+- Added option to use an alternative endpoint compatible with Amazon S3
+
+
+## [2.1.0] - 2022-06-25
 
 - Fix restore script assuming database name of "postgres". Thank you Nick Brassel for spotting the issue
 

@@ -3,6 +3,8 @@ backup-s3
 
 __backup-s3__ periodically backs up a database (postgres or mysql) and/or data folder(s) to Amazon S3. Backups can be restored with a single command.
 
+New in v2.2: it is now possible to specify the S3 endpoint to work with any alternative S3-compatible endpoint.
+
 The typical use case is to back up an application (e.g. Wordpress) run with docker-compose.
 
 ![backup-s3.png](https://bitbucket.org/hleroy/backup-s3/raw/67be5a9d7b52717f70dbe7653c8f51ce00ce789d/backup-s3.png)
@@ -26,6 +28,7 @@ Add backup-s3 to your compose file. This is an example to backup a Wordpress con
       S3_BUCKET: my-bucket
       S3_ACCESS_KEY_ID: access_key_id
       S3_SECRET_ACCESS_KEY: secret_access_key
+      # S3_ENDPOINT_URL:         # Optional: only if you are using an alternative S3-compatible endpoint
       # Database
       DB_ENGINE: mysql
       DB_NAME: wordpress
@@ -39,9 +42,11 @@ Add backup-s3 to your compose file. This is an example to backup a Wordpress con
       CRON_SCHEDULE: '0 0 * * *' # Every day at midnight
 ```
 
-`BACKUP_ENABLED` (new in v2.0.0) is mandatory. Any non-empty value will work (e.g. True, Yes). If omitted, the container exits with code 0.
+`BACKUP_ENABLED` (new in v2.0) is mandatory. Any non-empty value will work (e.g. True, Yes). If omitted, the container exits with code 0.
 
 S3 settings (`S3_REGION`, `S3_BUCKET`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`) are all mandatory. If any of them is missing, the container exits with code 1.
+
+`S3_ENDPOINT_URL` (new in v2.2) is optional in case you wish to use an alternative S3-compatible endpoint. e.g. for Scaleway Paris region `https://s3.fr-par.scw.cloud`
 
 `DB_ENGINE` can be `mysql` or `postgres`. If omitted, no database backup is attempted. If present, but database settings are missing, the container exits with code 1.
 `DB_PORT` is optional. It defaults to 3306 (for mysql) or 5432 (for postgres).
