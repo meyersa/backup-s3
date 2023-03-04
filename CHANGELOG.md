@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.0] - 2023-03-04
+
+- Added tags to target specific Postgres version (e.g. hleroy/backup-s3:v3.0-pg13)
+- Added build script to automate building all images with relevant tags
+- Added --if-exists to postgres dropdb statement to avoid throwing an error is the database doesn't exist. Thank you Matthew Vella for raising the issue.
+- Reorganized Dockerfile to improve build time for subsequent build
+- Fixed apt-key deprecation warning
+
+
 ## [2.2.0] - 2023-01-14
 
 - Added option to use an alternative endpoint compatible with Amazon S3

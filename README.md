@@ -3,11 +3,20 @@ backup-s3
 
 __backup-s3__ periodically backs up a database (postgres or mysql) and/or data folder(s) to Amazon S3. Backups can be restored with a single command.
 
+New in v3.0: it is now possible to target a specific version of postgres client from v13 till v15
 New in v2.2: it is now possible to specify the S3 endpoint to work with any alternative S3-compatible endpoint.
 
 The typical use case is to back up an application (e.g. Wordpress) run with docker-compose.
 
 ![backup-s3.png](https://bitbucket.org/hleroy/backup-s3/raw/67be5a9d7b52717f70dbe7653c8f51ce00ce789d/backup-s3.png)
+
+
+Supported tags
+--------------
+
+* v3.0-pg15, latest
+* v3.0-pg14
+* v3.0-pg13
 
 
 Setup with docker-compose
